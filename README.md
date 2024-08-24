@@ -1,16 +1,24 @@
 # apc_IE
 Intrinsic Estimator for Age, Period, Cohort Analysis
 
-This R routine estimates age, period, and cohort effects using the Intrinsic Estimator as described in Fu (2000) [Fu, W.J., 2000. "The ridge estimator in singular design with application to age, period, cohort analysis of disease rates." Communication in Statistics – Theory and Methods 29, 263–27], and Y. Yang and K.C. Land (2013), [Age-Period-Cohort Analysis
-New Models, Methods, and Empirical Applications, Chapman & Hall.]
+This R routine estimates age, period, and cohort (apc) effects using the Intrinsic Estimator (IE) as described in Fu (2000) 
 
-The input data frame must contain variables named: Y, N, age, period, cohort, based on an age by period table of counts Y and exposures N. Variable names are checked and the data are passed to a function that constructs a centered-effects design matrix for the age, period, and cohort factors. Although the "last" factor level is commonly used as a referent in existing software (i.e., the Stata module apc_ie)--and is the default normalization here, this routine also allows the "first" level to be used as a reference (see, e.g., L. Luo, et al.'s commentary in the American Journal of Sociology). 
+Fu, W.J., 2000. "The ridge estimator in singular design with application to age, period, cohort analysis of disease rates." _Communication in Statistics – Theory and Methods_ 29, 263–27, 
 
-The resulting design matrix is passed to routines for the linear model (lnear log rate), 
-or nonlinear models (Poisson or Binomial) regression. Results are then passed to a function that normalizes the
+and in 
+
+Y. Yang and K.C. Land (2013), _Age-Period-Cohort Analysis
+New Models, Methods, and Empirical Applications_, Chapman & Hall.
+
+The input data frame must contain variables named: Y, N, age, period, cohort, based on an age by period table of counts Y and exposures N. Variable names are checked and the data are passed to a function that constructs a centered-effects design matrix for the age, period, and cohort factors. Although the "last" factor level is commonly used as a referent in existing software (i.e., the Stata module apc_ie)--and is the default normalization here, this routine also allows the "first" level to be used as a reference (see, e.g., L. Luo, et al.'s (2016) commentary in the _American Journal of Sociology_). 
+
+The resulting design matrix is passed to routines for the linear model (log rate), 
+or nonlinear models (Poisson or Binomial). Results are then passed to a function that normalizes the
 apc parameters so that the full set of results is output to a data frame. 
 
-This approach is described in more detail in the attached paper. 
+This approach is described in more detail in the attached paper, 
+
+D.A Powers (2013) "Black–white differences in maternal age, maternal birth cohort, and period effects on infant mortality in the US (1983–2002)," _Social Science Research_, 1033–1045.
 
 ### Example:.
 Read data and source the function script.
