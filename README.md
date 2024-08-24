@@ -111,6 +111,5 @@ apcdfAve %>%
   xlab("") + ylim(-.5, 1) +
   theme(strip.text = element_text(size=15)) -> pA
 
-gridExtra::grid.arrange(pL, pF, pA, nrow=1, ncol=3 )
-
+gridExtra::grid.arrange(pL, pF, pA, nrow=3, ncol=1 )
 ```
