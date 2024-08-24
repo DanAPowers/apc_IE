@@ -8,7 +8,9 @@ The input data frame must contain variables named: Y, N, age, period, cohort, ba
 
 The resulting design matrix is passed to routines for the linear model (lnear log rate), 
 or nonlinear models (Poisson or Binomial) regression. Results are then passed to a function that normalizes the
-apc parameters so that the full set of results is output to a data frame.
+apc parameters so that the full set of results is output to a data frame. 
+
+This approach is described in more detail in the attached paper. 
 
 ### Example:.
 Read data and source the function script.
@@ -33,4 +35,74 @@ Similarly, we can request a logit model using ``family="Binomial"
 ```
 logitmod <- IE_rate(dat, family="Binomial", bstart=b)
 print(logitmod, digits=3)
+```
+### Manipulating Results
+The returned results are in a dataframe (unless the ```out="raw"``` option is used). This is handy for processing in ```ggplot```.
+As an illustration we fit both last- and first-category normalized Poisson regresssions using data from the attached article.
+```
+#
+# generate two sets of apc results (first and last category reference) 
+#
+# last category level as reference
+#
+p.modL <- IE_rate(dat, ref="last", family="Poisson")
+p.modL[grep('age', rownames(p.modL)),] %>% 
+    mutate(x = seq(15,45,5), apcfact=factor(rep("Age"))) -> agedfL
+p.modL[grep('period', rownames(p.modL)),] %>%
+    mutate(x= seq(1985,2000,5), apcfact=factor(rep("Period"))) -> perdfL
+p.modL[grep('cohort', rownames(p.modL)),] %>%
+    mutate(x = seq(40,85,5), apcfact=factor(rep("Cohort")))  -> cohdfL
+
+apcdfL <- rbind(agedfL, perdfL, cohdfL)
+
+#
+# first category level as reference
+#
+p.modF <- IE_rate(dat, ref="first", family="Poisson")
+p.modF[grep('age', rownames(p.modF)),] %>% 
+  mutate(x = seq(15,45,5), apcfact=factor(rep("Age"))) -> agedfF
+p.modF[grep('period', rownames(p.modF)),] %>%
+  mutate(x= seq(1985,2000,5), apcfact=factor(rep("Period"))) -> perdfF
+p.modF[grep('cohort', rownames(p.modF)),] %>%
+  mutate(x = seq(40,85,5), apcfact=factor(rep("Cohort")))  -> cohdfF
+
+apcdfF <- rbind(agedfF, perdfF, cohdfF)
+```
+Next we average these sets of results to get the ingredients for a ```ggplot```.
+```
+# average results
+average.apc(apcdfF, apcdfL) -> apcdfAve
+```
+Then compare the plots (for sensitivity to reference category)
+```
+# make plots
+apcdfL %>%
+  ggplot(aes(y=estimate, x=x), color=apcfact) +
+  facet_wrap(apcfact ~., scales="free_x") +
+  geom_line(col="darkslategrey", alpha=6.0) +
+  geom_ribbon(aes(ymin=lower, ymax=upper), 
+              fill="darkorange", alpha=.6) +
+  xlab("") + ylim(-.5, 1) +
+  theme(strip.text = element_text(size=15)) -> pL
+
+apcdfF %>%
+  ggplot(aes(y=estimate, x=x), color=apcfact) +
+  facet_wrap(apcfact ~., scales="free_x") +
+  geom_line(col="darkslategrey", alpha=6.0) +
+  geom_ribbon(aes(ymin=lower, ymax=upper), 
+              fill="darkorange", alpha=.6) +
+  xlab("") +  ylim(-.5, 1) +
+  theme(strip.text = element_text(size=15)) -> pF
+
+apcdfAve %>%
+  ggplot(aes(y=y, x=x), color=apcfact) +
+  facet_wrap(apcfact ~., scales="free_x") +
+  geom_line(col="darkslategrey", alpha=6.0) +
+  geom_ribbon(aes(ymin=lower, ymax=upper), 
+              fill="darkorange", alpha=.6) +
+  xlab("") + ylim(-.5, 1) +
+  theme(strip.text = element_text(size=15)) -> pA
+
+gridExtra::grid.arrange(pL, pF, pA, nrow=1, ncol=3 )
+
 ```
