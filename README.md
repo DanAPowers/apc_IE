@@ -10,7 +10,7 @@ and in
 Y.C. Yang and K.C. Land (2013), _Age-Period-Cohort Analysis
 New Models, Methods, and Empirical Applications_, Chapman & Hall.
 
-The input data frame must contain variables named: Y, N, age, period, cohort, based on an age by period table of counts Y and exposures N. Variable names are checked and the data are passed to a function that constructs a centered-effects design matrix for the age, period, and cohort factors. Although the "last" factor level is commonly used as a referent in existing software (i.e., the Stata module apc_ie)--and is the default normalization here, this routine also allows the "first" level to be used as a reference (see, e.g., L. Luo, et al.'s (2016) commentary in the _American Journal of Sociology_). 
+The input data frame must contain variables named: Y, N, age, period, cohort, based on an age by period table of counts Y and exposures N. Variable names are checked and the data are passed to a function that constructs a centered-effects design matrix for the age, period, and cohort factors. Although the "last" factor level is commonly used as a referent in existing software (i.e., the Stata module apc_ie)---and is the default normalization here---this routine also allows the "first" level to be used as a reference (see, e.g., L. Luo, et al.'s (2016) commentary in the _American Journal of Sociology_). 
 
 The resulting design matrix is passed to routines for the linear model (log rate), 
 or nonlinear models (Poisson or Binomial). Results are then passed to a function that normalizes the
